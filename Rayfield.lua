@@ -42,11 +42,18 @@ local MainWindow = Rayfield:CreateWindow({
 })
 
 
-local MainTab = Window:CreateTab("All Script", 4483362458) -- Title, Image
-local Section = Tab:CreateSection("Script")
+local MainTab = Window:CreateTab("All Script", nil) -- Title, Image
+local MainSection = MainTab:CreateSection("Script")
 
 
-local Button = Tab:CreateButton({
+Rayfield:Notify({
+   Title = "Tota hub is running. . .",
+   Content = "Made by luvsformeii",
+   Duration = 5,
+   Image = nil,
+})
+
+local Button = MainTab:CreateButton({
    Name = "Universal Vspeed changer",
    Callback = function()
 loadstring(game:HttpGet("https://protected-roblox-scripts.onrender.com/a570696f44faad573d3173ad68b5dd5e"))()
