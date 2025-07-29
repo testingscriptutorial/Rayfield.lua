@@ -42,7 +42,8 @@ local MainWindow = Rayfield:CreateWindow({
 })
 
 
-local MainTab = Window:CreateTab("Tab Example", 4483362458) -- Title, Image
+local MainTab = Window:CreateTab("All Script", 4483362458) -- Title, Image
+local Section = Tab:CreateSection("Script")
 
 
 local Button = Tab:CreateButton({
