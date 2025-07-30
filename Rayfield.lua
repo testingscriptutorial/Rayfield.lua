@@ -5,57 +5,109 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 Rayfield:LoadConfiguration()
 
 local MainWindow = Rayfield:CreateWindow({
-   Name = "Rayfield",
-   Icon = 0, -- Icon in Topbar. Can use Lucide Icons (string) or Roblox Image (number). 0 to use no icon (default).
+   Name = "Tota Hub",
+   Icon = nil,
    LoadingTitle = "Loading . . .",
-   LoadingSubtitle = "by Sirius",
-   ShowText = "Rayfield", -- for mobile users to unhide rayfield, change if you'd like
-   Theme = "Serenity", -- Check https://docs.sirius.menu/rayfield/configuration/themes
+   LoadingSubtitle = "by luvsformeii",
+   ShowText = "Tota Hub",
+   Theme = "Default",
 
-   ToggleUIKeybind = "K", -- The keybind to toggle the UI visibility (string like "K" or Enum.KeyCode)
+   ToggleUIKeybind = "K",
 
    DisableRayfieldPrompts = false,
-   DisableBuildWarnings = false, -- Prevents Rayfield from warning when the script has a version mismatch with the interface
+   DisableBuildWarnings = false, 
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = nil, -- Create a custom folder for your hub/game
+      FolderName = "Tota hub",
       FileName = "Tota Hub"
    },
 
    Discord = {
-      Enabled = false, -- Prompt the user to join your Discord server if their executor supports it
-      Invite = "noinvitelink", -- The Discord invite code, do not include discord.gg/. E.g. discord.gg/ ABCD would be ABCD
-      RememberJoins = true -- Set this to false to make them join the discord every time they load it up
+      Enabled = false,
+      Invite = "noinvitelink",
+      RememberJoins = true
    },
 
-   KeySystem = true, -- Set this to true to use our key system
+   KeySystem = true,
    KeySettings = {
       Title = "Tota hub | Key system",
       Subtitle = "Key System",
-      Note = "Key:1234", -- Use this to tell the user how to get a key
-      FileName = "Key", -- It is recommended to use something unique as other scripts using Rayfield may overwrite your key file
-      SaveKey = true, -- The user's key will be saved, but if you change the key, they will be unable to use your script
-      GrabKeyFromSite = false, -- If this is true, set Key below to the RAW site you would like Rayfield to get the key from
-      Key = {"1234"} -- List of keys that will be accepted by the system, can be RAW file links (pastebin, github etc) or simple strings ("hello","key22")
+      Note = "Key:1234",
+      FileName = "Key system",
+      SaveKey = false,
+      GrabKeyFromSite = false,
+      Key = {"1234"}
    }
 })
 
 
-local MainTab = Window:CreateTab("All Script", nil) -- Title, Image
-local MainSection = MainTab:CreateSection("Script")
+local MainTab = MainWindow:CreateTab("Useful script") 
 
-
-Rayfield:Notify({
-   Title = "Tota hub is running. . .",
-   Content = "Made by luvsformeii",
-   Duration = 5,
-   Image = nil,
-})
 
 local Button = MainTab:CreateButton({
-   Name = "Universal Vspeed changer",
+   Name = "Universal Vspeed changer(Mobile)",
    Callback = function()
-loadstring(game:HttpGet("https://protected-roblox-scripts.onrender.com/a570696f44faad573d3173ad68b5dd5e"))()
+      loadstring(game:HttpGet("https://protected-roblox-scripts.onrender.com/a570696f44faad573d3173ad68b5dd5e"))()
+   end,
+})
+
+
+local SecondButton = MainTab:CreateButton({
+   Name = "Keyboard Gui",
+   Callback = function()
+       loadstring(game:HttpGet(('https://pastefy.app/Ujm4HWxh/raw'),true))()
+   end,
+})
+
+
+local ThirdButton = MainTab:CreateButton({
+   Name = "Infinite Yield",
+   Callback = function()
+   
+loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+   end,
+})
+
+
+local OtherTab = MainWindow:CreateTab("Other Hub")
+
+
+local FourthButton = OtherTab:CreateButton({
+   Name = "Solara Hub",
+   Callback = function()
+   
+loadstring(game:HttpGet("https://raw.githubusercontent.com/samuraa1/Solara-Hub/refs/heads/main/Solara%20Hub.lua"))()
+   end,
+})
+
+
+local AimbotTab = MainWindow:CreateTab("Aimbot&Esp")
+
+
+local FifthButton = AimbotTab:CreateButton({
+   Name = "Volcano Aimbot",
+   Callback = function()
+
+loadstring(game:HttpGet("https://pastebin.com/raw/qtZt0Nzb"))()
+   end,
+})
+
+
+local MiscTab = MainWindow:CreateTab("Misc")
+
+
+local Slider = MiscTab:CreateSlider({
+   Name = "Walkspeed",
+   Range = {0, 100},
+   Increment = 1,
+   Suffix = " Speed",
+   CurrentValue = 16, -- 16 is the default WalkSpeed
+   Flag = "Walkspeed value",
+   Callback = function(Value)
+      local player = game.Players.LocalPlayer
+      if player and player.Character and player.Character:FindFirstChild("Humanoid") then
+         player.Character.Humanoid.WalkSpeed = Value
+      end
    end,
 })
