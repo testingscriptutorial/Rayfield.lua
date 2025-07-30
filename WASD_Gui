@@ -1,125 +1,96 @@
+local vim = game:GetService("VirtualInputManager")
 local player = game.Players.LocalPlayer
+
+-- Create GUI
 local gui = Instance.new("ScreenGui")
-gui.Name = "MobileKeyGUI"
+gui.Name = "TestKeyboardSim"
 gui.ResetOnSpawn = false
 gui.IgnoreGuiInset = true
 gui.Parent = player:WaitForChild("PlayerGui")
 
+-- Lock toggle
 local unlocked = false
-local activeKeys = { W = false, A = false, S = false, D = false }
 
--- 🔁 Movement logic (only when keys are pressed)
-game:GetService("RunService").RenderStepped:Connect(function()
-   local char = player.Character
-   local hrp = char and char:FindFirstChild("HumanoidRootPart")
-   local hum = char and char:FindFirstChild("Humanoid")
-   if not (char and hrp and hum) then return end
+-- Create lock/unlock button
+local lockButton = Instance.new("TextButton")
+lockButton.Size = UDim2.new(0, 80, 0, 30)
+lockButton.Position = UDim2.new(0, 0, 0, 180)
+lockButton.Text = "🔒 Lock"
+lockButton.Font = Enum.Font.GothamBold
+lockButton.TextScaled = true
+lockButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+lockButton.TextColor3 = Color3.new(1, 1, 1)
+lockButton.BorderSizePixel = 0
+lockButton.Parent = gui
+Instance.new("UICorner", lockButton).CornerRadius = UDim.new(1, 0)
 
-   if not (activeKeys.W or activeKeys.A or activeKeys.S or activeKeys.D) then return end
-
-   local cam = workspace.CurrentCamera.CFrame
-   local moveVec = Vector3.zero
-
-   if activeKeys.W then moveVec += cam.LookVector end
-   if activeKeys.S then moveVec -= cam.LookVector end
-   if activeKeys.A then moveVec -= cam.RightVector end
-   if activeKeys.D then moveVec += cam.RightVector end
-
-   moveVec = Vector3.new(moveVec.X, 0, moveVec.Z)
-
-   if moveVec.Magnitude > 0 then
-      hum:Move(moveVec.Unit, false)
-   end
+lockButton.MouseButton1Click:Connect(function()
+	unlocked = not unlocked
+	lockButton.Text = unlocked and "🔓 Unlock" or "🔒 Lock"
 end)
 
--- 🔒 Lock/Unlock toggle button
-local lockToggle = Instance.new("TextButton", gui)
-lockToggle.Size = UDim2.new(0, 80, 0, 30)
-lockToggle.Position = UDim2.new(1, -90, 0, 10)
-lockToggle.Text = "🔒 Lock"
-lockToggle.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-lockToggle.TextColor3 = Color3.new(1, 1, 1)
-lockToggle.BorderSizePixel = 0
-lockToggle.Font = Enum.Font.GothamBold
-lockToggle.TextScaled = true
-
-local toggleCorner = Instance.new("UICorner", lockToggle)
-toggleCorner.CornerRadius = UDim.new(1, 0)
-
--- 🔘 Toggle lock state
-lockToggle.MouseButton1Click:Connect(function()
-   unlocked = not unlocked
-   lockToggle.Text = unlocked and "🔓 Unlock" or "🔒 Lock"
-end)
-
--- 🔘 Button layout positions
-local keyLayout = {
-   {Key = "W", Pos = UDim2.new(0, 100, 1, -180)},
-   {Key = "A", Pos = UDim2.new(0, 50, 1, -120)},
-   {Key = "S", Pos = UDim2.new(0, 100, 1, -120)},
-   {Key = "D", Pos = UDim2.new(0, 150, 1, -120)}
+-- Key definitions
+local keys = {
+	{Key = "W", KeyCode = Enum.KeyCode.W, Pos = UDim2.new(0, 100, 1, -180)},
+	{Key = "A", KeyCode = Enum.KeyCode.A, Pos = UDim2.new(0, 50, 1, -120)},
+	{Key = "S", KeyCode = Enum.KeyCode.S, Pos = UDim2.new(0, 100, 1, -120)},
+	{Key = "D", KeyCode = Enum.KeyCode.D, Pos = UDim2.new(0, 150, 1, -120)},
 }
 
--- 🔧 Create a round button with white border outline
-local function createKeyButton(key, pos)
-   local btn = Instance.new("TextButton", gui)
-   btn.Name = "Key_" .. key
-   btn.Text = key
-   btn.Size = UDim2.new(0, 50, 0, 50)
-   btn.Position = pos
-   btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-   btn.TextColor3 = Color3.new(1, 1, 1)
-   btn.BorderSizePixel = 0
-   btn.Font = Enum.Font.GothamBold
-   btn.TextScaled = true
-   btn.AutoButtonColor = true
+-- Create each key button
+for _, info in ipairs(keys) do
+	local btn = Instance.new("TextButton")
+	btn.Size = UDim2.new(0, 80, 0, 80)
+	btn.Position = info.Pos
+	btn.Text = info.Key
+	btn.Font = Enum.Font.GothamBold
+	btn.TextScaled = true
+	btn.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+	btn.TextColor3 = Color3.new(1, 1, 1)
+	btn.BorderSizePixel = 0
+	btn.Parent = gui
 
-   -- ✅ Rounded button
-   local corner = Instance.new("UICorner")
-   corner.CornerRadius = UDim.new(1, 0)
-   corner.Parent = btn
+	Instance.new("UICorner", btn).CornerRadius = UDim.new(1, 0)
+	local stroke = Instance.new("UIStroke", btn)
+	stroke.Color = Color3.new(1, 1, 1)
+	stroke.Thickness = 1.5
 
-   -- ✅ White border outline (around button, not text)
-   local stroke = Instance.new("UIStroke")
-   stroke.Color = Color3.new(1, 1, 1)
-   stroke.Thickness = 3
-   stroke.Transparency = 0
-   stroke.Parent = btn
+	-- Keyboard input trigger
+	btn.MouseButton1Down:Connect(function()
+		if not unlocked then
+			vim:SendKeyEvent(true, info.KeyCode, false, game)
+		end
+	end)
 
-   -- ✅ Dragging logic
-   local dragging = false
-   local dragStart, startPos
+	btn.MouseButton1Up:Connect(function()
+		if not unlocked then
+			vim:SendKeyEvent(false, info.KeyCode, false, game)
+		end
+	end)
 
-   btn.InputBegan:Connect(function(input)
-      if unlocked and input.UserInputType == Enum.UserInputType.Touch then
-         dragging = true
-         dragStart = input.Position
-         startPos = btn.Position
-      elseif not unlocked then
-         activeKeys[key] = true
-      end
-   end)
+	-- Dragging (when unlocked)
+	local dragging = false
+	local dragStart, startPos
 
-   btn.InputChanged:Connect(function(input)
-      if dragging and input.UserInputType == Enum.UserInputType.Touch then
-         local delta = input.Position - dragStart
-         btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-                                  startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-      end
-   end)
+	btn.InputBegan:Connect(function(input)
+		if unlocked and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseButton1) then
+			dragging = true
+			dragStart = input.Position
+			startPos = btn.Position
+		end
+	end)
 
-   btn.InputEnded:Connect(function(input)
-      if dragging then
-         dragging = false
-      elseif not unlocked then
-         activeKeys[key] = false
-      end
-   end)
+	btn.InputChanged:Connect(function(input)
+		if dragging and (input.UserInputType == Enum.UserInputType.Touch or input.UserInputType == Enum.UserInputType.MouseMovement) then
+			local delta = input.Position - dragStart
+			btn.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+				startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+		end
+	end)
 
-   return btn
-end
-
--- 🔨 Create all key buttons
-for _, info in ipairs(keyLayout) do
-   createKeyButton(info.Key, info.Pos)
+	btn.InputEnded:Connect(function(input)
+		if dragging then
+			dragging = false
+		end
+	end)
 end
