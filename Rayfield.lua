@@ -5,22 +5,22 @@ local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
 Rayfield:LoadConfiguration()
 
 local MainWindow = Rayfield:CreateWindow({
-   Name = "Tota Hub",
+   Name = "Quirky Hub",
    Icon = nil,
    LoadingTitle = "Loading . . .",
    LoadingSubtitle = "by luvsformeii",
-   ShowText = "Tota Hub",
+   ShowText = "Quirky Hub",
    Theme = "Default",
 
-   ToggleUIKeybind = "K",
+   ToggleUIKeybind = "P",
 
    DisableRayfieldPrompts = false,
    DisableBuildWarnings = false, 
 
    ConfigurationSaving = {
       Enabled = true,
-      FolderName = "Tota hub",
-      FileName = "Tota Hub"
+      FolderName = "Quirky hub",
+      FileName = "Quirky Hub"
    },
 
    Discord = {
@@ -31,18 +31,18 @@ local MainWindow = Rayfield:CreateWindow({
 
    KeySystem = true,
    KeySettings = {
-      Title = "Tota hub | Key system",
+      Title = "Quirky hub | Key system",
       Subtitle = "Key System",
-      Note = "Key:1234",
+      Note = "KEY : 4664",
       FileName = "Key system",
       SaveKey = false,
       GrabKeyFromSite = false,
-      Key = {"1234"}
+      Key = {"4664"}
    }
 })
 
 
-local MainTab = MainWindow:CreateTab("Useful script") 
+local MainTab = MainWindow:CreateTab("Main script") 
 
 
 local Button = MainTab:CreateButton({
@@ -83,12 +83,12 @@ local AnotherButton = MainTab:CreateButton({
    Name = "Speed Booster",
    Callback = function()
 
-loadstring(Game:HttpGet('https://raw.githubusercontent.com/testingscriptutorial/Rayfield.lua/refs/heads/main/speed%20boost’))()
+loadstring(game:HttpGet('https://raw.githubusercontent.com/testingscriptutorial/Rayfield.lua/refs/heads/main/speed%20boost'))()
    end,
 })
 
 
-local AnotherButton =
+local FlyButton =
 MainTab:CreateButton({
    Name = "Fantastic Fly",
    Callback = function()
